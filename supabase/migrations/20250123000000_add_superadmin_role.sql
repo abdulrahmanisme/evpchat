@@ -1,0 +1,2 @@
+-- This file has been split into separate migrations to avoid enum commit issues
+-- See: 20250123000001_add_superadmin_enum.sql and 20250123000002_add_superadmin_policies.sql
