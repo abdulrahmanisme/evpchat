@@ -3,10 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-<<<<<<< HEAD
-=======
-import { AdminOverview } from "@/components/admin/AdminOverview";
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 import { AdminCampuses } from "@/components/admin/AdminCampuses";
 import { AdminReflectionSubmissions } from "@/components/admin/AdminReflectionSubmissions";
 import { AdminEventManagement } from "@/components/admin/AdminEventManagement";
@@ -60,27 +56,14 @@ const AdminDashboard = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
-<<<<<<< HEAD
         <Tabs defaultValue="reflection-submissions" className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
-=======
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
             <TabsTrigger value="reflection-submissions">Reflection Submissions</TabsTrigger>
             <TabsTrigger value="events">Event Management</TabsTrigger>
             <TabsTrigger value="attendance">Attendance</TabsTrigger>
             <TabsTrigger value="campuses">Campus Management</TabsTrigger>
           </TabsList>
           
-<<<<<<< HEAD
-=======
-          <TabsContent value="overview">
-            <AdminOverview />
-          </TabsContent>
-          
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
           <TabsContent value="reflection-submissions">
             <AdminReflectionSubmissions />
           </TabsContent>

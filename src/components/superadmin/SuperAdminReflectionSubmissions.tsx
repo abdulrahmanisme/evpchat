@@ -5,10 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-<<<<<<< HEAD
 import { Textarea } from "@/components/ui/textarea";
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
@@ -42,15 +39,12 @@ interface ReflectionSubmission {
   response: string;
   effort_score: number | null;
   quality_score: number | null;
-<<<<<<< HEAD
   admin_effort_score: number | null;
   admin_quality_score: number | null;
   admin_feedback: string | null;
   manually_reviewed: boolean;
   reviewed_by: string | null;
   reviewed_at: string | null;
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   credit_value: number;
   created_at: string;
   profiles: {

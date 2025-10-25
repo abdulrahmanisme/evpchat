@@ -5,10 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-<<<<<<< HEAD
 import { Textarea } from "@/components/ui/textarea";
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -41,15 +38,12 @@ interface ReflectionSubmission {
   response: string;
   effort_score: number | null;
   quality_score: number | null;
-<<<<<<< HEAD
   admin_effort_score: number | null;
   admin_quality_score: number | null;
   admin_feedback: string | null;
   manually_reviewed: boolean;
   reviewed_by: string | null;
   reviewed_at: string | null;
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   credit_value: number;
   created_at: string;
   profiles: {
@@ -76,7 +70,6 @@ export const AdminReflectionSubmissions = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [principleFilter, setPrincipleFilter] = useState("all");
   const [scoreFilter, setScoreFilter] = useState("all");
-<<<<<<< HEAD
   const [expandedUsers, setExpandedUsers] = useState<Set<string>>(new Set());
   const [expandedPrinciples, setExpandedPrinciples] = useState<Set<string>>(new Set());
   const [expandedSubmissions, setExpandedSubmissions] = useState<Set<string>>(new Set());
@@ -112,19 +105,10 @@ export const AdminReflectionSubmissions = () => {
     return () => {
       supabase.removeChannel(reflectionsChannel);
     };
-=======
-  const [expandedSubmissions, setExpandedSubmissions] = useState<Set<string>>(new Set());
-  const [loadingDetails, setLoadingDetails] = useState<Set<string>>(new Set());
-  const [aiDetails, setAiDetails] = useState<Record<string, AIEvaluationDetails>>({});
-
-  useEffect(() => {
-    loadSubmissions();
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   }, []);
 
   const loadSubmissions = async () => {
     try {
-<<<<<<< HEAD
       console.log('Loading reflection submissions...');
       
       // First, fetch reflections
@@ -170,21 +154,6 @@ export const AdminReflectionSubmissions = () => {
     } catch (error: any) {
       console.error('Error loading submissions:', error);
       toast.error(`Failed to load reflection submissions: ${error.message}`);
-=======
-      const { data, error } = await supabase
-        .from('reflections')
-        .select(`
-          *,
-          profiles!user_id (name, campus_name)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setSubmissions(data || []);
-    } catch (error: any) {
-      console.error('Error loading submissions:', error);
-      toast.error('Failed to load reflection submissions');
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     } finally {
       setLoading(false);
     }
@@ -251,7 +220,6 @@ export const AdminReflectionSubmissions = () => {
     }
   };
 
-<<<<<<< HEAD
   const startEdit = (submission: ReflectionSubmission) => {
     setEditingSubmission(submission.id);
     setEditForm({
@@ -334,7 +302,6 @@ export const AdminReflectionSubmissions = () => {
     return matchesSearch && matchesPrinciple && matchesScore;
   });
 
-<<<<<<< HEAD
   // Group submissions by user and then by principle
   const groupedByUser = filteredSubmissions.reduce((acc, submission) => {
     const userId = submission.user_id;
@@ -573,7 +540,6 @@ export const AdminReflectionSubmissions = () => {
         </CardContent>
       </Card>
 
-<<<<<<< HEAD
       {/* Detailed Submissions - Grouped by User */}
       <div className="space-y-4">
         {Object.entries(groupedByUser).map(([userId, userData]) => {
