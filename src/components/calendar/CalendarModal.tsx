@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+<<<<<<< HEAD
 import { ChevronLeft, ChevronRight, MapPin, Clock, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
+=======
+import { ChevronLeft, ChevronRight, MapPin, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
 interface Event {
   id: string;
@@ -13,6 +18,7 @@ interface Event {
   time: string;
   location: string;
   type: 'meeting' | 'workshop' | 'event';
+<<<<<<< HEAD
   description?: string;
 }
 
@@ -26,6 +32,13 @@ interface AttendanceRecord {
   verified_at?: string;
   verified_by?: string;
   created_at: string;
+=======
+}
+
+interface AttendanceRecord {
+  date: string;
+  attended: boolean;
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 }
 
 interface CalendarModalProps {
@@ -37,8 +50,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<Event[]>([]);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
+<<<<<<< HEAD
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [eventDialogPosition, setEventDialogPosition] = useState({ x: 0, y: 0 });
+=======
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
   // Sample events data - replace with actual API call
   const sampleEvents: Event[] = [
@@ -48,8 +64,12 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       date: '2024-01-15',
       time: '10:00 AM',
       location: 'Main Office',
+<<<<<<< HEAD
       type: 'meeting',
       description: 'Monthly campus lead coordination meeting to discuss upcoming events and initiatives.'
+=======
+      type: 'meeting'
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     },
     {
       id: '2',
@@ -57,8 +77,12 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       date: '2024-01-20',
       time: '2:00 PM',
       location: 'Conference Room A',
+<<<<<<< HEAD
       type: 'workshop',
       description: 'Interactive workshop focused on developing leadership skills and team management techniques.'
+=======
+      type: 'workshop'
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     },
     {
       id: '3',
@@ -66,6 +90,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
       date: '2024-01-25',
       time: '11:00 AM',
       location: 'Outdoor Area',
+<<<<<<< HEAD
       type: 'event',
       description: 'Fun team building activities designed to strengthen collaboration and communication among campus leads.'
     }
@@ -129,6 +154,42 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+=======
+      type: 'event'
+    }
+  ];
+
+  // Sample attendance data - replace with actual API call
+  const sampleAttendance: AttendanceRecord[] = [
+    { date: '2024-01-01', attended: true },
+    { date: '2024-01-02', attended: false },
+    { date: '2024-01-03', attended: true },
+    { date: '2024-01-04', attended: true },
+    { date: '2024-01-05', attended: false },
+    { date: '2024-01-08', attended: true },
+    { date: '2024-01-09', attended: true },
+    { date: '2024-01-10', attended: false },
+    { date: '2024-01-11', attended: true },
+    { date: '2024-01-12', attended: true },
+    { date: '2024-01-15', attended: true },
+    { date: '2024-01-16', attended: false },
+    { date: '2024-01-17', attended: true },
+    { date: '2024-01-18', attended: true },
+    { date: '2024-01-19', attended: false },
+    { date: '2024-01-22', attended: true },
+    { date: '2024-01-23', attended: true },
+    { date: '2024-01-24', attended: true },
+    { date: '2024-01-25', attended: true },
+    { date: '2024-01-26', attended: false }
+  ];
+
+  useEffect(() => {
+    // Load events and attendance data
+    setEvents(sampleEvents);
+    setAttendance(sampleAttendance);
+  }, []);
+
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -171,7 +232,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
 
   const getAttendanceForDate = (date: Date) => {
     const dateStr = date.toISOString().split('T')[0];
+<<<<<<< HEAD
     return attendance.find(record => record.event_date === dateStr);
+=======
+    return attendance.find(record => record.date === dateStr);
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   };
 
   const formatDate = (date: Date) => {
@@ -194,6 +259,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+<<<<<<< HEAD
   const handleEventClick = (event: Event, clickEvent: React.MouseEvent) => {
     setSelectedEvent(event);
     // Position the dialog at the bottom of the calendar
@@ -266,6 +332,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
+=======
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const days = getDaysInMonth(currentDate);
 
   return (
@@ -300,7 +368,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Calendar Grid */}
+<<<<<<< HEAD
           <div className="calendar-grid grid grid-cols-7 gap-1">
+=======
+          <div className="grid grid-cols-7 gap-1">
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
             {/* Day headers */}
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
               <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
@@ -317,7 +389,10 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
               const dayEvents = getEventsForDate(day);
               const attendanceRecord = getAttendanceForDate(day);
               const isToday = day.toDateString() === new Date().toDateString();
+<<<<<<< HEAD
               const hasAttended = attendanceRecord && attendanceRecord.credits_earned > 0;
+=======
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
               return (
                 <motion.div
@@ -325,7 +400,12 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                   className={`
                     p-2 min-h-[80px] border rounded-lg cursor-pointer transition-all duration-200
                     ${isToday ? 'bg-blue-50 border-blue-200' : 'bg-white border-gray-200'}
+<<<<<<< HEAD
                     ${hasAttended ? 'ring-1 ring-green-200 bg-green-50' : ''}
+=======
+                    ${attendanceRecord?.attended ? 'ring-1 ring-green-200 bg-green-50' : ''}
+                    ${attendanceRecord?.attended === false ? 'ring-1 ring-red-200 bg-red-50' : ''}
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                     hover:shadow-md
                   `}
                   whileHover={{ scale: 1.02 }}
@@ -338,7 +418,11 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                       </span>
                       {attendanceRecord && (
                         <div className={`w-2 h-2 rounded-full ${
+<<<<<<< HEAD
                           hasAttended ? 'bg-green-500' : 'bg-gray-400'
+=======
+                          attendanceRecord.attended ? 'bg-green-500' : 'bg-red-500'
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                         }`} />
                       )}
                     </div>
@@ -348,11 +432,15 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
                         <Badge
                           key={event.id}
                           variant="outline"
+<<<<<<< HEAD
                           className={`text-xs p-1 cursor-pointer hover:shadow-md transition-shadow ${getEventTypeColor(event.type)}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleEventClick(event, e);
                           }}
+=======
+                          className={`text-xs p-1 ${getEventTypeColor(event.type)}`}
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                         >
                           {event.title}
                         </Badge>
@@ -368,11 +456,19 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
           <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
+<<<<<<< HEAD
               <span className="text-sm">Attended Event</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-gray-400"></div>
               <span className="text-sm">Event Available</span>
+=======
+              <span className="text-sm">Attended</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span className="text-sm">Absent</span>
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500"></div>
@@ -393,6 +489,7 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
             </Badge>
           </div>
         </div>
+<<<<<<< HEAD
 
         {/* Event Detail Dialog */}
         {selectedEvent && (
@@ -522,6 +619,8 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ isOpen, onClose }) => {
             </div>
           </>
         )}
+=======
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
       </DialogContent>
     </Dialog>
   );

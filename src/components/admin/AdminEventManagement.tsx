@@ -52,6 +52,7 @@ export const AdminEventManagement = () => {
 
   const loadEvents = async () => {
     try {
+<<<<<<< HEAD
       const { data, error } = await supabase
         .from('events')
         .select('*')
@@ -59,6 +60,32 @@ export const AdminEventManagement = () => {
 
       if (error) throw error;
       setEvents(data || []);
+=======
+      // For now, using sample data. Replace with actual Supabase query when events table is created
+      const sampleEvents: Event[] = [
+        {
+          id: '1',
+          title: 'Campus Lead Meeting',
+          date: '2024-01-15',
+          time: '10:00 AM',
+          location: 'Main Office',
+          type: 'meeting',
+          description: 'Monthly campus lead coordination meeting',
+          created_at: '2024-01-01T10:00:00Z'
+        },
+        {
+          id: '2',
+          title: 'Leadership Workshop',
+          date: '2024-01-20',
+          time: '2:00 PM',
+          location: 'Conference Room A',
+          type: 'workshop',
+          description: 'Workshop on leadership skills and team management',
+          created_at: '2024-01-02T14:00:00Z'
+        }
+      ];
+      setEvents(sampleEvents);
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     } catch (error) {
       console.error('Error loading events:', error);
       toast.error('Failed to load events');
@@ -115,6 +142,7 @@ export const AdminEventManagement = () => {
         return;
       }
 
+<<<<<<< HEAD
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         toast.error('You must be logged in to create events');
@@ -152,19 +180,43 @@ export const AdminEventManagement = () => {
           });
 
         if (error) throw error;
+=======
+      // For now, just update local state. Replace with actual Supabase operations when events table is created
+      if (editingEvent) {
+        setEvents(prev => prev.map(event => 
+          event.id === editingEvent.id 
+            ? { ...event, ...eventForm }
+            : event
+        ));
+        toast.success('Event updated successfully');
+      } else {
+        const newEvent: Event = {
+          id: Date.now().toString(),
+          ...eventForm,
+          created_at: new Date().toISOString()
+        };
+        setEvents(prev => [...prev, newEvent]);
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
         toast.success('Event created successfully');
       }
 
       setIsDialogOpen(false);
+<<<<<<< HEAD
       loadEvents(); // Reload events to show updated data
     } catch (error: any) {
       console.error('Error saving event:', error);
       toast.error(`Failed to save event: ${error.message}`);
+=======
+    } catch (error) {
+      console.error('Error saving event:', error);
+      toast.error('Failed to save event');
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     }
   };
 
   const handleDeleteEvent = async (eventId: string) => {
     try {
+<<<<<<< HEAD
       const { error } = await supabase
         .from('events')
         .delete()
@@ -176,6 +228,13 @@ export const AdminEventManagement = () => {
     } catch (error: any) {
       console.error('Error deleting event:', error);
       toast.error(`Failed to delete event: ${error.message}`);
+=======
+      setEvents(prev => prev.filter(event => event.id !== eventId));
+      toast.success('Event deleted successfully');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      toast.error('Failed to delete event');
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     }
   };
 

@@ -49,10 +49,17 @@ serve(async (req) => {
       });
     }
 
+<<<<<<< HEAD
     // Evaluate reflection using Gemini with 2-metric system (Effort and Quality only)
     const evaluation = await evaluateReflectionWithGemini(principle1, question1, response1, geminiApiKey, detailed1);
 
     // Update the reflection with AI scores (only Effort and Quality)
+=======
+    // Evaluate reflection using Gemini
+    const evaluation = await evaluateReflectionWithGemini(principle1, question1, response1, geminiApiKey, detailed1);
+
+    // Update the reflection with AI scores
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     const { error: updateError } = await supabase
       .from('reflections')
       .update({
@@ -137,13 +144,18 @@ Return ONLY a valid JSON object (no markdown, no code blocks):
   "suggestions": ["<suggestion 1>", "<suggestion 2>"]
 }`;
 
+<<<<<<< HEAD
   const prompt = `You are an AI evaluator for a campus leadership reflection system.
 Evaluate the following response CONSISTENTLY across all submissions using the 2 metrics below.
+=======
+  const prompt = `Evaluate this campus lead reflection for entrepreneurial development.
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
 **Principle:** ${principle1}
 **Question:** ${question1}
 **Response:** ${response1}
 
+<<<<<<< HEAD
 ### IMPORTANT - Scoring Guidelines for Consistency:
 
 **EFFORT SCORE (0-10):**
@@ -178,10 +190,18 @@ Evaluate the following response CONSISTENTLY across all submissions using the 2 
 3. Use the FULL 0-10 scale (don't cluster around 5-7)
 4. If information is vague, penalize appropriately
 5. Reward specificity, quantifiable results, and clear evidence
+=======
+Rate on two dimensions (0-10 each):
+1. **Effort Score:** Initiative and dedication shown
+2. **Quality Score:** Writing clarity and insightfulness
+
+Consider: specificity, learning evidence, principle demonstration, writing clarity, reflection depth.
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
 ${detailedPrompt}`;
 
   try {
+<<<<<<< HEAD
     let geminiResponse;
     let retries = 0;
     const maxRetries = 3;
@@ -239,6 +259,34 @@ ${detailedPrompt}`;
           throw fetchError;
         }
       }
+=======
+    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 2000
+        }
+      })
+    });
+
+    if (!geminiResponse.ok) {
+      const errorText = await geminiResponse.text();
+      console.error('Gemini API error response:', errorText);
+      throw new Error(`Gemini API error: ${geminiResponse.status} - ${errorText}`);
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     }
 
     const data = await geminiResponse.json();
@@ -316,9 +364,14 @@ ${detailedPrompt}`;
       throw new Error(`Failed to parse AI response: ${parseError.message}`);
     }
 
+<<<<<<< HEAD
     // Validate required fields (only Effort and Quality now)
     if (typeof evaluation.effort_score !== 'number' || 
         typeof evaluation.quality_score !== 'number') {
+=======
+    // Validate required fields
+    if (typeof evaluation.effort_score !== 'number' || typeof evaluation.quality_score !== 'number') {
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
       throw new Error('AI response missing required score fields');
     }
 
@@ -340,7 +393,11 @@ ${detailedPrompt}`;
       response: response1.substring(0, 50) + '...'
     });
 
+<<<<<<< HEAD
     // Fallback evaluation with only 2 metrics
+=======
+    // Fallback evaluation with more specific error message
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     const fallbackEvaluation = {
       effort_score: Math.min(5, Math.max(1, response1.length / 50)),
       quality_score: Math.min(5, Math.max(1, response1.split(' ').length / 20)),

@@ -37,7 +37,10 @@ const Dashboard = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [currentPrinciple, setCurrentPrinciple] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+<<<<<<< HEAD
   const [isSubmitting, setIsSubmitting] = useState(false);
+=======
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const [attendance, setAttendance] = useState<AttendanceData>({
     days_attended: 15,
     total_days: 20,
@@ -183,7 +186,11 @@ const Dashboard = () => {
     );
   };
 
+<<<<<<< HEAD
   const handleNextPrinciple = async () => {
+=======
+  const handleNextPrinciple = () => {
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     if (!isCurrentPrincipleComplete()) {
       toast.error("Please answer all questions before proceeding.");
       return;
@@ -192,6 +199,7 @@ const Dashboard = () => {
     if (currentPrinciple < principles.length - 1) {
       setCurrentPrinciple(currentPrinciple + 1);
     } else {
+<<<<<<< HEAD
       // Submit all reflections when finished
       await submitReflections();
     }
@@ -268,6 +276,11 @@ const Dashboard = () => {
       toast.error(error.message || 'Failed to submit reflections');
     } finally {
       setIsSubmitting(false);
+=======
+      setIsDialogOpen(false);
+      setCurrentPrinciple(0);
+      toast.success("All reflections completed successfully!");
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     }
   };
 
@@ -626,9 +639,15 @@ const Dashboard = () => {
                       ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600' 
                       : 'bg-gray-400 cursor-not-allowed'
                   }`}
+<<<<<<< HEAD
                   disabled={!isCurrentPrincipleComplete() || isSubmitting}
                 >
                   {isSubmitting ? 'Submitting...' : (currentPrinciple === principles.length - 1 ? 'Finish & Submit' : 'Next')}
+=======
+                  disabled={!isCurrentPrincipleComplete()}
+                >
+                  {currentPrinciple === principles.length - 1 ? 'Finish' : 'Next'}
+>>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                 </Button>
               </div>
             </div>
