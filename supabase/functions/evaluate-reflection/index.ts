@@ -49,17 +49,10 @@ serve(async (req) => {
       });
     }
 
-<<<<<<< HEAD
-    // Evaluate reflection using Gemini with 2-metric system (Effort and Quality only)
-    const evaluation = await evaluateReflectionWithGemini(principle1, question1, response1, geminiApiKey, detailed1);
-
-    // Update the reflection with AI scores (only Effort and Quality)
-=======
     // Evaluate reflection using Gemini
     const evaluation = await evaluateReflectionWithGemini(principle1, question1, response1, geminiApiKey, detailed1);
 
     // Update the reflection with AI scores
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     const { error: updateError } = await supabase
       .from('reflections')
       .update({

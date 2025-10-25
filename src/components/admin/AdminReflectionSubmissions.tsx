@@ -143,13 +143,29 @@ export const AdminReflectionSubmissions = () => {
         // Combine data
         const submissionsWithProfiles = reflections?.map(reflection => ({
           ...reflection,
+          admin_effort_score: null,
+          admin_quality_score: null,
+          admin_feedback: null,
+          manually_reviewed: false,
+          reviewed_by: null,
+          reviewed_at: null,
           profiles: profiles?.find(p => p.id === reflection.user_id)
         })) || [];
 
         console.log('Combined submissions:', submissionsWithProfiles);
         setSubmissions(submissionsWithProfiles);
       } else {
-        setSubmissions(reflections || []);
+        const reflectionsWithDefaults = reflections?.map(reflection => ({
+          ...reflection,
+          admin_effort_score: null,
+          admin_quality_score: null,
+          admin_feedback: null,
+          manually_reviewed: false,
+          reviewed_by: null,
+          reviewed_at: null,
+          profiles: null
+        })) || [];
+        setSubmissions(reflectionsWithDefaults);
       }
     } catch (error: any) {
       console.error('Error loading submissions:', error);
@@ -368,8 +384,6 @@ export const AdminReflectionSubmissions = () => {
     setExpandedSubmissions(newExpanded);
   };
 
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const getScoreColor = (score: number | null) => {
     if (score === null) return "text-gray-500";
     if (score >= 8) return "text-green-600";
@@ -550,25 +564,6 @@ export const AdminReflectionSubmissions = () => {
               <CardHeader 
                 className="cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => toggleUserExpanded(userId)}
-=======
-      {/* Detailed Submissions */}
-      <div className="space-y-4">
-        {filteredSubmissions.map((submission) => {
-          const isExpanded = expandedSubmissions.has(submission.id);
-          const IconComponent = getPrincipleIcon(submission.principle);
-          const details = aiDetails[submission.id];
-
-          return (
-            <Card key={submission.id} className="overflow-hidden">
-              <CardHeader 
-                className="cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => {
-                  toggleExpanded(submission.id);
-                  if (!isExpanded) {
-                    getDetailedAIEvaluation(submission);
-                  }
-                }}
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -594,29 +589,6 @@ export const AdminReflectionSubmissions = () => {
                     <Badge variant="outline">
                       {Object.values(userData.principles).flat().length} Submissions
                     </Badge>
-=======
-                      <IconComponent className="h-5 w-5 text-gray-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">{submission.profiles?.name || 'Unknown'}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {submission.profiles?.campus_name || 'N/A'} • {format(new Date(submission.created_at), 'MMM dd, yyyy')}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={getPrincipleColor(submission.principle)}>
-                      {submission.principle}
-                    </Badge>
-                    <div className="flex gap-2">
-                      <Badge className={getScoreBadgeColor(submission.effort_score)}>
-                        Effort: {submission.effort_score !== null ? submission.effort_score.toFixed(1) : 'Pending'}
-                      </Badge>
-                      <Badge className={getScoreBadgeColor(submission.quality_score)}>
-                        Quality: {submission.quality_score !== null ? submission.quality_score.toFixed(1) : 'Pending'}
-                      </Badge>
-                    </div>
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                   </div>
                 </div>
               </CardHeader>
@@ -688,11 +660,11 @@ export const AdminReflectionSubmissions = () => {
                                             </p>
                                           </div>
                                           <div className="flex gap-2">
-                                            <Badge className={getScoreBadgeColor(submission.admin_effort_score || submission.effort_score)} size="sm">
+                                            <Badge className={`${getScoreBadgeColor(submission.admin_effort_score || submission.effort_score)} text-xs`}>
                                               Effort: {submission.admin_effort_score !== null ? submission.admin_effort_score.toFixed(1) : (submission.effort_score !== null ? submission.effort_score.toFixed(1) : 'Pending')}
                                               {submission.admin_effort_score !== null && <span className="ml-1 text-xs">(A)</span>}
                                             </Badge>
-                                            <Badge className={getScoreBadgeColor(submission.admin_quality_score || submission.quality_score)} size="sm">
+                                            <Badge className={`${getScoreBadgeColor(submission.admin_quality_score || submission.quality_score)} text-xs`}>
                                               Quality: {submission.admin_quality_score !== null ? submission.admin_quality_score.toFixed(1) : (submission.quality_score !== null ? submission.quality_score.toFixed(1) : 'Pending')}
                                               {submission.admin_quality_score !== null && <span className="ml-1 text-xs">(A)</span>}
                                             </Badge>
@@ -912,157 +884,6 @@ export const AdminReflectionSubmissions = () => {
                       );
                     })}
                   </div>
-=======
-              {isExpanded && (
-                <CardContent className="pt-0">
-                  <Tabs defaultValue="response" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="response">Response Details</TabsTrigger>
-                      <TabsTrigger value="evaluation">AI Evaluation</TabsTrigger>
-                      <TabsTrigger value="reasoning">Detailed Reasoning</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="response" className="space-y-4">
-                      <div className="space-y-3">
-                        <div>
-                          <h4 className="font-semibold text-sm text-gray-600 mb-2">Question:</h4>
-                          <p className="text-gray-800 bg-gray-50 p-3 rounded-lg">
-                            {submission.question}
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-sm text-gray-600 mb-2">Student Response:</h4>
-                          <p className="text-gray-800 bg-blue-50 p-3 rounded-lg whitespace-pre-wrap">
-                            {submission.response}
-                          </p>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="evaluation" className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card className="border-green-200 bg-green-50/50">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-green-800 flex items-center gap-2">
-                              <Star className="h-4 w-4" />
-                              Effort Score
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="text-3xl font-bold text-green-900 mb-2">
-                              {submission.effort_score !== null ? submission.effort_score.toFixed(1) : 'Pending'}
-                            </div>
-                            <p className="text-xs text-green-700">
-                              Measures initiative, dedication, and proactivity
-                            </p>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border-blue-200 bg-blue-50/50">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-blue-800 flex items-center gap-2">
-                              <Award className="h-4 w-4" />
-                              Quality Score
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="text-3xl font-bold text-blue-900 mb-2">
-                              {submission.quality_score !== null ? submission.quality_score.toFixed(1) : 'Pending'}
-                            </div>
-                            <p className="text-xs text-blue-700">
-                              Measures thoughtfulness, clarity, and insightfulness
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      {details && (
-                        <div className="space-y-3">
-                          <div>
-                            <h4 className="font-semibold text-sm text-gray-600 mb-2 flex items-center gap-2">
-                              <MessageSquare className="h-4 w-4" />
-                              AI Feedback:
-                            </h4>
-                            <p className="text-gray-800 bg-yellow-50 p-3 rounded-lg">
-                              {details.feedback}
-                            </p>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-sm text-gray-600 mb-2 flex items-center gap-2">
-                              <Lightbulb className="h-4 w-4" />
-                              Suggestions for Improvement:
-                            </h4>
-                            <ul className="space-y-1">
-                              {details.suggestions.map((suggestion, index) => (
-                                <li key={index} className="text-gray-800 bg-purple-50 p-2 rounded-lg text-sm">
-                                  • {suggestion}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-                    </TabsContent>
-
-                    <TabsContent value="reasoning" className="space-y-4">
-                      {details ? (
-                        <div className="space-y-4">
-                          <Card className="border-orange-200 bg-orange-50/50">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-sm font-medium text-orange-800 flex items-center gap-2">
-                                <Brain className="h-4 w-4" />
-                                Effort Reasoning
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-gray-800 text-sm">
-                                {details.reasoning?.effort_reasoning || "Effort reasoning not available"}
-                              </p>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border-purple-200 bg-purple-50/50">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-sm font-medium text-purple-800 flex items-center gap-2">
-                                <Award className="h-4 w-4" />
-                                Quality Reasoning
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-gray-800 text-sm">
-                                {details.reasoning?.quality_reasoning || "Quality reasoning not available"}
-                              </p>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border-indigo-200 bg-indigo-50/50">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-sm font-medium text-indigo-800 flex items-center gap-2">
-                                <TrendingUp className="h-4 w-4" />
-                                Overall Assessment
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-gray-800 text-sm">
-                                {details.reasoning?.overall_assessment || "Overall assessment not available"}
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      ) : loadingDetails.has(submission.id) ? (
-                        <div className="text-center py-8">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                          <p className="text-gray-500">Loading AI reasoning...</p>
-                        </div>
-                      ) : (
-                        <div className="text-center py-8">
-                          <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-500">Click to load detailed AI reasoning...</p>
-                        </div>
-                      )}
-                    </TabsContent>
-                  </Tabs>
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                 </CardContent>
               )}
             </Card>
