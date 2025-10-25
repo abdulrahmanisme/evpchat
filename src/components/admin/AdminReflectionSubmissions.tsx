@@ -575,22 +575,17 @@ export const AdminReflectionSubmissions = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-<<<<<<< HEAD
                       {isUserExpanded ? (
-=======
-                      {isExpanded ? (
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                         <ChevronDown className="h-4 w-4 text-gray-500" />
                       ) : (
                         <ChevronRight className="h-4 w-4 text-gray-500" />
                       )}
-<<<<<<< HEAD
                       <User className="h-5 w-5 text-gray-600" />
                     </div>
                     <div>
                       <CardTitle className="text-lg">{userData.name}</CardTitle>
                       <p className="text-sm text-muted-foreground">
-                        {userData.campus_name} • {earliestSubmission ? format(new Date(earliestSubmission.created_at), 'MMM dd, yyyy') : 'N/A'}
+                        {userData.campus_name} • {earliestSubmission ? new Date(earliestSubmission.created_at).toLocaleDateString() : 'N/A'}
                       </p>
                     </div>
                   </div>
@@ -628,7 +623,6 @@ export const AdminReflectionSubmissions = () => {
                 </div>
               </CardHeader>
 
-<<<<<<< HEAD
               {/* Principles for this user */}
               {isUserExpanded && (
                 <CardContent className="pt-0 border-t bg-gray-50/50">

@@ -2,14 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-<<<<<<< HEAD
 import { ChevronLeft, ChevronRight, MapPin, Clock, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-=======
-import { ChevronLeft, ChevronRight, MapPin, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
 interface Event {
   id: string;
@@ -18,7 +13,6 @@ interface Event {
   time: string;
   location: string;
   type: 'meeting' | 'workshop' | 'event';
-<<<<<<< HEAD
   description?: string;
 }
 
@@ -32,13 +26,6 @@ interface AttendanceRecord {
   verified_at?: string;
   verified_by?: string;
   created_at: string;
-=======
-}
-
-interface AttendanceRecord {
-  date: string;
-  attended: boolean;
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 }
 
 interface CalendarModalProps {
