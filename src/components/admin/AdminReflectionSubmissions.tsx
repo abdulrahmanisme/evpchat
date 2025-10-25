@@ -286,8 +286,6 @@ export const AdminReflectionSubmissions = () => {
     }
   };
 
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const filteredSubmissions = submissions.filter(submission => {
     const matchesSearch = submission.profiles?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          submission.profiles?.campus_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||

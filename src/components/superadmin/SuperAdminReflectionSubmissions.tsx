@@ -73,7 +73,6 @@ export const SuperAdminReflectionSubmissions = () => {
   const [principleFilter, setPrincipleFilter] = useState("all");
   const [scoreFilter, setScoreFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
-<<<<<<< HEAD
   const [expandedUsers, setExpandedUsers] = useState<Set<string>>(new Set());
   const [expandedPrinciples, setExpandedPrinciples] = useState<Set<string>>(new Set());
   const [expandedSubmissions, setExpandedSubmissions] = useState<Set<string>>(new Set());
@@ -85,11 +84,6 @@ export const SuperAdminReflectionSubmissions = () => {
     quality_score: "",
     feedback: ""
   });
-=======
-  const [expandedSubmissions, setExpandedSubmissions] = useState<Set<string>>(new Set());
-  const [loadingDetails, setLoadingDetails] = useState<Set<string>>(new Set());
-  const [aiDetails, setAiDetails] = useState<Record<string, AIEvaluationDetails>>({});
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
 
   useEffect(() => {
     loadSubmissions();
@@ -97,7 +91,6 @@ export const SuperAdminReflectionSubmissions = () => {
 
   const loadSubmissions = async () => {
     try {
-<<<<<<< HEAD
       console.log('Loading reflection submissions...');
       
       // First, fetch reflections
@@ -156,41 +149,6 @@ export const SuperAdminReflectionSubmissions = () => {
     } catch (error: any) {
       console.error('Error loading submissions:', error);
       toast.error(`Failed to load reflection submissions: ${error.message}`);
-=======
-      const { data, error } = await supabase
-        .from('reflections')
-        .select(`
-          *,
-          profiles!user_id (name, campus_name)
-        `)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      
-      // Get user roles separately
-      const userIds = data?.map(submission => submission.user_id) || [];
-      const { data: rolesData } = await supabase
-        .from('user_roles')
-        .select('user_id, role')
-        .in('user_id', userIds);
-
-      // Create a map of user_id to role
-      const roleMap = new Map(rolesData?.map(role => [role.user_id, role.role]) || []);
-
-      // Add role information to submissions
-      const submissionsWithRoles = data?.map(submission => ({
-        ...submission,
-        profiles: {
-          ...submission.profiles,
-          app_role: roleMap.get(submission.user_id) || 'campus_lead'
-        }
-      })) || [];
-
-      setSubmissions(submissionsWithRoles);
-    } catch (error: any) {
-      console.error('Error loading submissions:', error);
-      toast.error('Failed to load reflection submissions');
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
     } finally {
       setLoading(false);
     }
@@ -257,7 +215,6 @@ export const SuperAdminReflectionSubmissions = () => {
     }
   };
 
-<<<<<<< HEAD
   const startEdit = (submission: ReflectionSubmission) => {
     setEditingSubmission(submission.id);
     setEditForm({
@@ -323,9 +280,6 @@ export const SuperAdminReflectionSubmissions = () => {
       toast.error(`Failed to update scores: ${error.message}`);
     }
   };
-
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const filteredSubmissions = submissions.filter(submission => {
     const matchesSearch = submission.profiles?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          submission.profiles?.campus_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -342,7 +296,6 @@ export const SuperAdminReflectionSubmissions = () => {
     return matchesSearch && matchesPrinciple && matchesScore && matchesRole;
   });
 
-<<<<<<< HEAD
   // Group submissions by user and then by principle
   const groupedByUser = filteredSubmissions.reduce((acc, submission) => {
     const userId = submission.user_id;
@@ -412,9 +365,6 @@ export const SuperAdminReflectionSubmissions = () => {
     }
     setExpandedSubmissions(newExpanded);
   };
-
-=======
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
   const getScoreColor = (score: number | null) => {
     if (score === null) return "text-gray-500";
     if (score >= 8) return "text-green-600";
@@ -629,7 +579,6 @@ export const SuperAdminReflectionSubmissions = () => {
         </CardContent>
       </Card>
 
-<<<<<<< HEAD
       {/* Detailed Submissions - Grouped by User */}
       <div className="space-y-4">
         {Object.entries(groupedByUser).map(([userId, userData]) => {
@@ -643,40 +592,15 @@ export const SuperAdminReflectionSubmissions = () => {
               <CardHeader 
                 className="cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => toggleUserExpanded(userId)}
-=======
-      {/* Detailed Submissions */}
-      <div className="space-y-4">
-        {filteredSubmissions.map((submission) => {
-          const isExpanded = expandedSubmissions.has(submission.id);
-          const IconComponent = getPrincipleIcon(submission.principle);
-          const RoleIconComponent = getRoleIcon(submission.profiles?.app_role || 'campus_lead');
-          const details = aiDetails[submission.id];
-
-          return (
-            <Card key={submission.id} className="overflow-hidden">
-              <CardHeader 
-                className="cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => {
-                  toggleExpanded(submission.id);
-                  if (!isExpanded) {
-                    getDetailedAIEvaluation(submission);
-                  }
-                }}
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-<<<<<<< HEAD
                       {isUserExpanded ? (
-=======
-                      {isExpanded ? (
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                         <ChevronDown className="h-4 w-4 text-gray-500" />
                       ) : (
                         <ChevronRight className="h-4 w-4 text-gray-500" />
                       )}
-<<<<<<< HEAD
                       <RoleIconComponent className="h-5 w-5 text-gray-600" />
                     </div>
                     <div>
@@ -699,40 +623,10 @@ export const SuperAdminReflectionSubmissions = () => {
                     <Badge variant="outline">
                       {Object.values(userData.principles).flat().length} Submissions
                     </Badge>
-=======
-                      <IconComponent className="h-5 w-5 text-gray-600" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <CardTitle className="text-lg">{submission.profiles?.name || 'Unknown'}</CardTitle>
-                        <Badge className={getRoleColor(submission.profiles?.app_role || 'campus_lead')}>
-                          <RoleIconComponent className="h-3 w-3 mr-1" />
-                          {submission.profiles?.app_role || 'campus_lead'}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {submission.profiles?.campus_name || 'N/A'} • {format(new Date(submission.created_at), 'MMM dd, yyyy')}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={getPrincipleColor(submission.principle)}>
-                      {submission.principle}
-                    </Badge>
-                    <div className="flex gap-2">
-                      <Badge className={getScoreBadgeColor(submission.effort_score)}>
-                        Effort: {submission.effort_score !== null ? submission.effort_score.toFixed(1) : 'Pending'}
-                      </Badge>
-                      <Badge className={getScoreBadgeColor(submission.quality_score)}>
-                        Quality: {submission.quality_score !== null ? submission.quality_score.toFixed(1) : 'Pending'}
-                      </Badge>
-                    </div>
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
                   </div>
                 </div>
               </CardHeader>
 
-<<<<<<< HEAD
               {/* Principles for this user */}
               {isUserExpanded && (
                 <CardContent className="pt-0 border-t bg-gray-50/50">
@@ -1024,158 +918,7 @@ export const SuperAdminReflectionSubmissions = () => {
                       );
                     })}
                   </div>
-=======
-              {isExpanded && (
-                <CardContent className="pt-0">
-                  <Tabs defaultValue="response" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
-                      <TabsTrigger value="response">Response Details</TabsTrigger>
-                      <TabsTrigger value="evaluation">AI Evaluation</TabsTrigger>
-                      <TabsTrigger value="reasoning">Detailed Reasoning</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="response" className="space-y-4">
-                      <div className="space-y-3">
-                        <div>
-                          <h4 className="font-semibold text-sm text-gray-600 mb-2">Question:</h4>
-                          <p className="text-gray-800 bg-gray-50 p-3 rounded-lg">
-                            {submission.question}
-                          </p>
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-sm text-gray-600 mb-2">Student Response:</h4>
-                          <p className="text-gray-800 bg-blue-50 p-3 rounded-lg whitespace-pre-wrap">
-                            {submission.response}
-                          </p>
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="evaluation" className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card className="border-green-200 bg-green-50/50">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-green-800 flex items-center gap-2">
-                              <Star className="h-4 w-4" />
-                              Effort Score
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="text-3xl font-bold text-green-900 mb-2">
-                              {submission.effort_score !== null ? submission.effort_score.toFixed(1) : 'Pending'}
-                            </div>
-                            <p className="text-xs text-green-700">
-                              Measures initiative, dedication, and proactivity
-                            </p>
                           </CardContent>
-                        </Card>
-
-                        <Card className="border-blue-200 bg-blue-50/50">
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-sm font-medium text-blue-800 flex items-center gap-2">
-                              <Award className="h-4 w-4" />
-                              Quality Score
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="text-3xl font-bold text-blue-900 mb-2">
-                              {submission.quality_score !== null ? submission.quality_score.toFixed(1) : 'Pending'}
-                            </div>
-                            <p className="text-xs text-blue-700">
-                              Measures thoughtfulness, clarity, and insightfulness
-                            </p>
-                          </CardContent>
-                        </Card>
-                      </div>
-
-                      {details && (
-                        <div className="space-y-3">
-                          <div>
-                            <h4 className="font-semibold text-sm text-gray-600 mb-2 flex items-center gap-2">
-                              <MessageSquare className="h-4 w-4" />
-                              AI Feedback:
-                            </h4>
-                            <p className="text-gray-800 bg-yellow-50 p-3 rounded-lg">
-                              {details.feedback}
-                            </p>
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-sm text-gray-600 mb-2 flex items-center gap-2">
-                              <Lightbulb className="h-4 w-4" />
-                              Suggestions for Improvement:
-                            </h4>
-                            <ul className="space-y-1">
-                              {details.suggestions.map((suggestion, index) => (
-                                <li key={index} className="text-gray-800 bg-purple-50 p-2 rounded-lg text-sm">
-                                  • {suggestion}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-                    </TabsContent>
-
-                    <TabsContent value="reasoning" className="space-y-4">
-                      {details ? (
-                        <div className="space-y-4">
-                          <Card className="border-orange-200 bg-orange-50/50">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-sm font-medium text-orange-800 flex items-center gap-2">
-                                <Brain className="h-4 w-4" />
-                                Effort Reasoning
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-gray-800 text-sm">
-                                {details.reasoning?.effort_reasoning || "Effort reasoning not available"}
-                              </p>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border-purple-200 bg-purple-50/50">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-sm font-medium text-purple-800 flex items-center gap-2">
-                                <Award className="h-4 w-4" />
-                                Quality Reasoning
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-gray-800 text-sm">
-                                {details.reasoning?.quality_reasoning || "Quality reasoning not available"}
-                              </p>
-                            </CardContent>
-                          </Card>
-
-                          <Card className="border-indigo-200 bg-indigo-50/50">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-sm font-medium text-indigo-800 flex items-center gap-2">
-                                <TrendingUp className="h-4 w-4" />
-                                Overall Assessment
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-gray-800 text-sm">
-                                {details.reasoning?.overall_assessment || "Overall assessment not available"}
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      ) : loadingDetails.has(submission.id) ? (
-                        <div className="text-center py-8">
-                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                          <p className="text-gray-500">Loading AI reasoning...</p>
-                        </div>
-                      ) : (
-                        <div className="text-center py-8">
-                          <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-500">Click to load detailed AI reasoning...</p>
-                        </div>
-                      )}
-                    </TabsContent>
-                  </Tabs>
->>>>>>> 87d4941c79fe8876bc9427c0bfc3396c547193f9
-                </CardContent>
               )}
             </Card>
           );
