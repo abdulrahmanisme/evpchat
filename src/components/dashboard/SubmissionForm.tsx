@@ -40,11 +40,20 @@ export const SubmissionForm = ({ onSuccess }: SubmissionFormProps) => {
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
+      if (!session) {
+        toast.error("You must be logged in to submit");
+        return;
+      }
 
       let proofUrl = null;
       if (file) {
-        proofUrl = await uploadProof(file, session.user.id);
+        try {
+          proofUrl = await uploadProof(file, session.user.id);
+        } catch (uploadError: any) {
+          console.error('File upload error:', uploadError);
+          toast.error(`File upload failed: ${uploadError.message}`);
+          return;
+        }
       }
 
       const { error } = await supabase

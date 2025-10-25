@@ -1,6 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 
 export const uploadProof = async (file: File, userId: string) => {
+  // Ensure user is authenticated
+  const { data: { session }, error: authError } = await supabase.auth.getSession();
+  if (authError || !session) {
+    throw new Error("User must be authenticated to upload files");
+  }
+
   const fileExt = file.name.split('.').pop();
   const fileName = `${userId}/${Date.now()}.${fileExt}`;
   
@@ -11,7 +17,10 @@ export const uploadProof = async (file: File, userId: string) => {
       upsert: false
     });
 
-  if (error) throw error;
+  if (error) {
+    console.error('Storage upload error:', error);
+    throw error;
+  }
   
   const { data: { publicUrl } } = supabase.storage
     .from('proofs')
