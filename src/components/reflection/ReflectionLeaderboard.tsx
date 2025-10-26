@@ -30,17 +30,96 @@ export const ReflectionLeaderboard = () => {
 
   const loadLeaderboard = async () => {
     try {
-      const { data, error } = await supabase
-        .from('user_gpa')
+      // Get all users who have submitted at least one reflection
+      const { data: reflections, error: reflectionsError } = await supabase
+        .from('reflections')
         .select(`
-          *,
-          profiles!user_id (name, campus_name)
-        `)
-        .order('rank', { ascending: true })
-        .limit(20);
+          user_id,
+          effort_score,
+          quality_score,
+          profiles!user_id (
+            name,
+            campus_name
+          )
+        `);
 
-      if (error) throw error;
-      setLeaderboard(data || []);
+      if (reflectionsError) throw reflectionsError;
+
+      // Group reflections by user_id and calculate statistics
+      const userStats = new Map<string, {
+        user_id: string;
+        name: string;
+        campus_name: string;
+        total_reflections: number;
+        effort_scores: number[];
+        quality_scores: number[];
+      }>();
+
+      reflections?.forEach(reflection => {
+        if (!reflection.user_id || !reflection.profiles) return;
+
+        const existing = userStats.get(reflection.user_id) || {
+          user_id: reflection.user_id,
+          name: reflection.profiles.name,
+          campus_name: reflection.profiles.campus_name,
+          total_reflections: 0,
+          effort_scores: [],
+          quality_scores: [],
+        };
+
+        if (reflection.effort_score) {
+          existing.effort_scores.push(reflection.effort_score);
+        }
+        if (reflection.quality_score) {
+          existing.quality_scores.push(reflection.quality_score);
+        }
+        existing.total_reflections++;
+        userStats.set(reflection.user_id, existing);
+      });
+
+      // Calculate GPA for each user
+      const leaderboardData = Array.from(userStats.values())
+        .map((user, index) => {
+          const avgEffort = user.effort_scores.length > 0
+            ? user.effort_scores.reduce((a, b) => a + b, 0) / user.effort_scores.length
+            : 0;
+
+          const avgQuality = user.quality_scores.length > 0
+            ? user.quality_scores.reduce((a, b) => a + b, 0) / user.quality_scores.length
+            : 0;
+
+          // Weighted GPA: (effort + quality) / 2
+          const weightedGPA = (avgEffort + avgQuality) / 2;
+
+          return {
+            id: user.user_id,
+            user_id: user.user_id,
+            total_reflections: user.total_reflections,
+            average_effort_score: avgEffort,
+            average_quality_score: avgQuality,
+            weighted_gpa: weightedGPA,
+            rank: 0, // Will be assigned below
+            profiles: {
+              name: user.name || 'Unknown',
+              campus_name: user.campus_name || 'N/A',
+            },
+          };
+        })
+        .filter(user => user.total_reflections > 0 && user.weighted_gpa > 0) // Only users with scored reflections
+        .sort((a, b) => {
+          // Sort by GPA descending, then by total reflections descending
+          if (b.weighted_gpa !== a.weighted_gpa) {
+            return b.weighted_gpa - a.weighted_gpa;
+          }
+          return b.total_reflections - a.total_reflections;
+        });
+
+      // Assign ranks
+      leaderboardData.forEach((user, index) => {
+        user.rank = index + 1;
+      });
+
+      setLeaderboard(leaderboardData);
     } catch (error: any) {
       console.error('Error loading leaderboard:', error);
     } finally {
@@ -82,6 +161,25 @@ export const ReflectionLeaderboard = () => {
           </Card>
         ))}
       </div>
+    );
+  }
+
+  if (leaderboard.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-12 text-center">
+          <div className="flex flex-col items-center gap-4">
+            <Trophy className="h-16 w-16 text-muted-foreground" />
+            <div>
+              <h3 className="text-xl font-semibold mb-2">No Reflections Yet</h3>
+              <p className="text-muted-foreground">
+                Campus leads haven't submitted any reflection forms yet. 
+                Check back once reflections are submitted!
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
