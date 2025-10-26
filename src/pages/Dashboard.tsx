@@ -284,6 +284,25 @@ const Dashboard = () => {
         navigate('/auth');
         return;
       }
+
+      // Check if user has admin or superadmin role
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id);
+
+      const hasSuperAdmin = roles?.some(r => r.role === 'superadmin');
+      const hasAdmin = roles?.some(r => r.role === 'admin');
+
+      if (hasSuperAdmin) {
+        navigate('/superadmin');
+        return;
+      } else if (hasAdmin) {
+        navigate('/admin');
+        return;
+      }
+
+      // Only load profile for campus leads
       loadProfile(session.user.id);
     };
     checkAuth();

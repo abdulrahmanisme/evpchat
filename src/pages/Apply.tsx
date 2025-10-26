@@ -27,6 +27,23 @@ const Apply = () => {
         return;
       }
 
+      // Check user roles
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id);
+
+      const hasSuperAdmin = roles?.some(r => r.role === 'superadmin');
+      const hasAdmin = roles?.some(r => r.role === 'admin');
+
+      if (hasSuperAdmin) {
+        navigate('/superadmin');
+        return;
+      } else if (hasAdmin) {
+        navigate('/admin');
+        return;
+      }
+
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
@@ -55,8 +72,24 @@ const Apply = () => {
 
       if (error) throw error;
 
+      // Check user roles before redirecting
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id);
+
+      const hasSuperAdmin = roles?.some(r => r.role === 'superadmin');
+      const hasAdmin = roles?.some(r => r.role === 'admin');
+
       toast.success("Profile updated successfully!");
-      navigate('/dashboard');
+      
+      if (hasSuperAdmin) {
+        navigate('/superadmin');
+      } else if (hasAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
       toast.error(error.message);
     } finally {
