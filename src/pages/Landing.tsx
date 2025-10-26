@@ -1,11 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
+import { WelcomeSplash } from "@/components/WelcomeSplash";
 import logo from "@/assets/edventure-park-logo.png";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const [showSplash, setShowSplash] = useState(false);
+
+  const handleGetStarted = () => {
+    setShowSplash(true);
+  };
+
+  const handleSplashComplete = () => {
+    navigate('/apply');
+  };
+
+  if (showSplash) {
+    return <WelcomeSplash onComplete={handleSplashComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -49,7 +64,7 @@ const Landing = () => {
             >
               <Button 
                 size="lg" 
-                onClick={() => navigate('/apply')}
+                onClick={handleGetStarted}
                 className="px-8"
               >
                 Get Started
