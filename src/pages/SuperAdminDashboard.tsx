@@ -1,16 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SuperAdminOverview } from "@/components/superadmin/SuperAdminOverview";
-import { SuperAdminUsers } from "@/components/superadmin/SuperAdminUsers";
-import { SuperAdminAdmins } from "@/components/superadmin/SuperAdminAdmins";
-import { SuperAdminReflectionSubmissions } from "@/components/superadmin/SuperAdminReflectionSubmissions";
-import { SuperAdminEventManagement } from "@/components/superadmin/SuperAdminEventManagement";
-import { SuperAdminAttendanceManagement } from "@/components/superadmin/SuperAdminAttendanceManagement";
 import { toast } from "sonner";
 import { Crown, Shield, Users, FileText, Calendar, CheckCircle } from "lucide-react";
+
+// Lazy load heavy components to reduce initial bundle size
+const SuperAdminOverview = lazy(() => import("@/components/superadmin/SuperAdminOverview").then(module => ({ default: module.SuperAdminOverview })));
+const SuperAdminUsers = lazy(() => import("@/components/superadmin/SuperAdminUsers").then(module => ({ default: module.SuperAdminUsers })));
+const SuperAdminAdmins = lazy(() => import("@/components/superadmin/SuperAdminAdmins").then(module => ({ default: module.SuperAdminAdmins })));
+const SuperAdminReflectionSubmissions = lazy(() => import("@/components/superadmin/SuperAdminReflectionSubmissions").then(module => ({ default: module.SuperAdminReflectionSubmissions })));
+const SuperAdminEventManagement = lazy(() => import("@/components/superadmin/SuperAdminEventManagement").then(module => ({ default: module.SuperAdminEventManagement })));
+const SuperAdminAttendanceManagement = lazy(() => import("@/components/superadmin/SuperAdminAttendanceManagement").then(module => ({ default: module.SuperAdminAttendanceManagement })));
+const AdminOfficeAttendance = lazy(() => import("@/components/admin/AdminOfficeAttendance").then(module => ({ default: module.AdminOfficeAttendance })));
+const AttendanceSettings = lazy(() => import("@/components/admin/AttendanceSettings").then(module => ({ default: module.AttendanceSettings })));
 
 const SuperAdminDashboard = () => {
   const navigate = useNavigate();
@@ -68,8 +72,12 @@ const SuperAdminDashboard = () => {
           </h1>
         </div>
         
-        <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+        <Tabs defaultValue="office-attendance" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-8">
+            <TabsTrigger value="office-attendance" className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              Office Attendance
+            </TabsTrigger>
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
               Overview
@@ -92,32 +100,60 @@ const SuperAdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="attendance" className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4" />
-              Attendance
+              Event Attendance
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Shield className="h-4 w-4" />
+              Settings
             </TabsTrigger>
           </TabsList>
           
+          <TabsContent value="office-attendance">
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AdminOfficeAttendance />
+            </Suspense>
+          </TabsContent>
+          
           <TabsContent value="overview">
-            <SuperAdminOverview />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <SuperAdminOverview />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="users">
-            <SuperAdminUsers />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <SuperAdminUsers />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="admins">
-            <SuperAdminAdmins />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <SuperAdminAdmins />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="reflections">
-            <SuperAdminReflectionSubmissions />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <SuperAdminReflectionSubmissions />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="events">
-            <SuperAdminEventManagement />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <SuperAdminEventManagement />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="attendance">
-            <SuperAdminAttendanceManagement />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <SuperAdminAttendanceManagement />
+            </Suspense>
+          </TabsContent>
+          
+          <TabsContent value="settings">
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AttendanceSettings />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>

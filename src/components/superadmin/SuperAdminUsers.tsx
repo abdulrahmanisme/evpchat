@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Edit, Trash2, Eye, UserPlus, Search } from "lucide-react";
+import { Edit, Trash2, Eye, UserPlus, Search, Check, X } from "lucide-react";
 
 interface CampusLead {
   id: string;
@@ -40,6 +40,8 @@ export const SuperAdminUsers = () => {
     total_score: 0,
     bonus_points: 0,
   });
+  const [editingNameId, setEditingNameId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState("");
 
   useEffect(() => {
     loadUsers();
@@ -51,18 +53,18 @@ export const SuperAdminUsers = () => {
         .from('profiles')
         .select(`
           *,
-          submissions!user_id (id, status)
+          reflections!user_id (id, effort_score, quality_score)
         `)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       const usersWithStats = profiles?.map(profile => {
-        const submissions = profile.submissions || [];
+        const reflections = profile.reflections || [];
         return {
           ...profile,
-          submissions_count: submissions.length,
-          verified_submissions: submissions.filter((s: any) => s.status === 'verified').length,
+          submissions_count: reflections.length,
+          verified_submissions: reflections.filter((r: any) => r.effort_score !== null && r.quality_score !== null).length,
         };
       }) || [];
 
@@ -119,6 +121,39 @@ export const SuperAdminUsers = () => {
       if (error) throw error;
 
       toast.success("User deleted successfully!");
+      loadUsers();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleStartEditName = (user: CampusLead) => {
+    setEditingNameId(user.id);
+    setEditingName(user.name);
+  };
+
+  const handleCancelEditName = () => {
+    setEditingNameId(null);
+    setEditingName("");
+  };
+
+  const handleSaveName = async (userId: string) => {
+    if (!editingName.trim()) {
+      toast.error("Name cannot be empty");
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ name: editingName })
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      toast.success("Name updated successfully!");
+      setEditingNameId(null);
+      setEditingName("");
       loadUsers();
     } catch (error: any) {
       toast.error(error.message);
@@ -220,7 +255,48 @@ export const SuperAdminUsers = () => {
             <TableBody>
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
+                  <TableCell className="font-medium">
+                    {editingNameId === user.id ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleSaveName(user.id);
+                            } else if (e.key === 'Escape') {
+                              handleCancelEditName();
+                            }
+                          }}
+                          className="h-8 w-48"
+                          autoFocus
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleSaveName(user.id)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Check className="h-4 w-4 text-green-600" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleCancelEditName}
+                          className="h-8 w-8 p-0"
+                        >
+                          <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleStartEditName(user)}
+                        className="hover:underline cursor-pointer"
+                      >
+                        {user.name}
+                      </button>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Badge variant="outline">{user.campus_name}</Badge>
                   </TableCell>

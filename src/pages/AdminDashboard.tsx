@@ -1,13 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminCampuses } from "@/components/admin/AdminCampuses";
-import { AdminReflectionSubmissions } from "@/components/admin/AdminReflectionSubmissions";
-import { AdminEventManagement } from "@/components/admin/AdminEventManagement";
-import { AdminAttendanceManagement } from "@/components/admin/AdminAttendanceManagement";
 import { toast } from "sonner";
+
+// Lazy load heavy components to reduce initial bundle size
+const AdminCampuses = lazy(() => import("@/components/admin/AdminCampuses").then(module => ({ default: module.AdminCampuses })));
+const AdminReflectionSubmissions = lazy(() => import("@/components/admin/AdminReflectionSubmissions").then(module => ({ default: module.AdminReflectionSubmissions })));
+const AdminEventManagement = lazy(() => import("@/components/admin/AdminEventManagement").then(module => ({ default: module.AdminEventManagement })));
+const AdminAttendanceManagement = lazy(() => import("@/components/admin/AdminAttendanceManagement").then(module => ({ default: module.AdminAttendanceManagement })));
+const AdminOfficeAttendance = lazy(() => import("@/components/admin/AdminOfficeAttendance").then(module => ({ default: module.AdminOfficeAttendance })));
+const AttendanceSettings = lazy(() => import("@/components/admin/AttendanceSettings").then(module => ({ default: module.AttendanceSettings })));
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -56,28 +60,50 @@ const AdminDashboard = () => {
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
-        <Tabs defaultValue="reflection-submissions" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="office-attendance" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="office-attendance">Office Attendance</TabsTrigger>
             <TabsTrigger value="reflection-submissions">Reflection Submissions</TabsTrigger>
             <TabsTrigger value="events">Event Management</TabsTrigger>
-            <TabsTrigger value="attendance">Attendance</TabsTrigger>
+            <TabsTrigger value="attendance">Event Attendance</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
             <TabsTrigger value="campuses">Campus Management</TabsTrigger>
           </TabsList>
           
+          <TabsContent value="office-attendance">
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AdminOfficeAttendance />
+            </Suspense>
+          </TabsContent>
+          
           <TabsContent value="reflection-submissions">
-            <AdminReflectionSubmissions />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AdminReflectionSubmissions />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="events">
-            <AdminEventManagement />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AdminEventManagement />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="attendance">
-            <AdminAttendanceManagement />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AdminAttendanceManagement />
+            </Suspense>
+          </TabsContent>
+          
+          <TabsContent value="settings">
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AttendanceSettings />
+            </Suspense>
           </TabsContent>
           
           <TabsContent value="campuses">
-            <AdminCampuses />
+            <Suspense fallback={<div className="text-center py-8">Loading...</div>}>
+              <AdminCampuses />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </div>

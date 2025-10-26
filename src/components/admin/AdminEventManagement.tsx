@@ -353,12 +353,36 @@ export const AdminEventManagement = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="time">Time *</Label>
-                <Input
-                  id="time"
-                  value={eventForm.time}
-                  onChange={(e) => setEventForm(prev => ({ ...prev, time: e.target.value }))}
-                  placeholder="e.g., 10:00 AM"
-                />
+                <div className="flex gap-2">
+                  <Select
+                    value={eventForm.time}
+                    onValueChange={(value) => setEventForm(prev => ({ ...prev, time: value }))}
+                  >
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Select time" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="8:00 AM">8:00 AM</SelectItem>
+                      <SelectItem value="9:00 AM">9:00 AM</SelectItem>
+                      <SelectItem value="10:00 AM">10:00 AM</SelectItem>
+                      <SelectItem value="11:00 AM">11:00 AM</SelectItem>
+                      <SelectItem value="12:00 PM">12:00 PM</SelectItem>
+                      <SelectItem value="1:00 PM">1:00 PM</SelectItem>
+                      <SelectItem value="2:00 PM">2:00 PM</SelectItem>
+                      <SelectItem value="3:00 PM">3:00 PM</SelectItem>
+                      <SelectItem value="4:00 PM">4:00 PM</SelectItem>
+                      <SelectItem value="5:00 PM">5:00 PM</SelectItem>
+                      <SelectItem value="6:00 PM">6:00 PM</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Input
+                    id="time"
+                    value={eventForm.time}
+                    onChange={(e) => setEventForm(prev => ({ ...prev, time: e.target.value }))}
+                    placeholder="Custom time"
+                    className="flex-1"
+                  />
+                </div>
               </div>
             </div>
 
